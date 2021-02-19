@@ -7,7 +7,7 @@ export const cardCreate = (user, cardData) => {
     method: 'POST',
     headers: {
       // we need the user so we have access to their token
-      'Authorization': `Token ${user.token}`
+      'Authorization': `Bearer ${user.token}`
     },
     // send the notes and status as our data object
     data: { cardData }

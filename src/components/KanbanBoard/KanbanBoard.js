@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-modal'
-// import Form from 'react-bootstrap/Form'
-// import ModalForm from 'react-bootstrap/ModalForm'
 import ModalFooter from 'react-bootstrap/ModalFooter'
 import apiUrl from '../../apiConfig'
 import axios from 'axios'
@@ -10,45 +8,47 @@ import axios from 'axios'
 // Prevents modal element error in console
 Modal.setAppElement('#root')
 
-const KanbanBoard = props => {
+const KanbanBoard = data => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   // const [cardText, setCardText] = useState('Enter card text here')
   // const [show, setShow] = useState(false)
-  const [cardData, setCardData] = useState({ notes: '', status: 'to-do' })
+  const [card, setCard] = useState({ notes: '', status: 'to-do' })
   const handleClose = () => setModalIsOpen(false)
   const handleShow = () => setModalIsOpen(true)
 
+  // handle changing card.notes to textarea input
   const handleChange = event => {
     event.persist()
-
-    setCardData(prevCardData => {
+    setCard(prevCardData => {
       // event.target.value is each letter typed into the textarea
-      console.log('Event.target.notes is ', event.target.value)
+      // console.log('Event.target.notes is ', event.target.value)
       const updatedField = { 'notes': event.target.value }
-      // now instead of saying prevState.cardData, we can just use prevCardData
+      // now instead of saying prevState.card, we can just use prevCardData
       const editedCard = Object.assign({}, prevCardData, updatedField)
       return editedCard
     })
   }
-
+  // console.log('This is card data', { card:{ card })
   // When create button is clicked, send data from modal to API
-  const handleCreate = (user, cardData) => {
-    console.log('This is card data', cardData)
+  const handleCreate = () => {
+    console.log('This is user data', data.user)
+    console.log('This is card data', { card })
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/',
       method: 'POST',
       headers: {
         // we need the user so we have access to their token
-        'Authorization': `Token ${user.token}`
+        'Authorization': `Token ${data.user.token}`
       },
       // send the notes and status as our data object
-      data: { cardData }
+      data: { card }
     })
-      .then(res => setCardData(res.data))
+      .then(res => console.log('This is data:', res.card))
+      // .then(res => setCard(res.cardData))
       .catch('Error', console.error)
   }
-  console.log(cardData)
+  // console.log('After handle create data ', cardData)
 
   return (
     <div>
@@ -73,7 +73,7 @@ const KanbanBoard = props => {
                   content: {
                     left: '150px',
                     right: '150px',
-                    bottom: '550px',
+                    bottom: '300px',
                     padding: '15px'
                   }
                 }
@@ -84,10 +84,9 @@ const KanbanBoard = props => {
                 <textarea
                   className="form-control"
                   id="add-card-text"
-                  value={cardData.notes}
+                  value={card.notes}
                   onChange={handleChange}
                 />
-                {/* <input type="submit" value="Submit">CREATE</input> */}
               </div>
               <ModalFooter>
                 <Button onClick={handleClose}> Close </Button>

@@ -14,6 +14,12 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 - Build button for adding cards
 - Got React Modal to open and close through button click
 
+2/19
+- Adjusted modal sizing
+- Made handleChange and handleCreate functions
+- Renamed all cardData to card to match the django card_views.py
+- Successfully made axios POST request to create a card
+
 
 ## Technologies
 * HTML/SCSS
