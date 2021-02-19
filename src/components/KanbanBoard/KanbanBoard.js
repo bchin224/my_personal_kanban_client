@@ -1,17 +1,54 @@
 import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-modal'
+// import Form from 'react-bootstrap/Form'
+// import ModalForm from 'react-bootstrap/ModalForm'
 import ModalFooter from 'react-bootstrap/ModalFooter'
+import apiUrl from '../../apiConfig'
+import axios from 'axios'
 
 // Prevents modal element error in console
 Modal.setAppElement('#root')
 
 const KanbanBoard = props => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  // const [cardText, setCardText] = useState('Enter card text here')
   // const [show, setShow] = useState(false)
-  //
+  const [cardData, setCardData] = useState({ notes: '', status: 'to-do' })
   const handleClose = () => setModalIsOpen(false)
   const handleShow = () => setModalIsOpen(true)
+
+  const handleChange = event => {
+    event.persist()
+
+    setCardData(prevCardData => {
+      // event.target.value is each letter typed into the textarea
+      console.log('Event.target.notes is ', event.target.value)
+      const updatedField = { 'notes': event.target.value }
+      // now instead of saying prevState.cardData, we can just use prevCardData
+      const editedCard = Object.assign({}, prevCardData, updatedField)
+      return editedCard
+    })
+  }
+
+  // When create button is clicked, send data from modal to API
+  const handleCreate = (user, cardData) => {
+    console.log('This is card data', cardData)
+    event.preventDefault()
+    axios({
+      url: apiUrl + '/cards/',
+      method: 'POST',
+      headers: {
+        // we need the user so we have access to their token
+        'Authorization': `Token ${user.token}`
+      },
+      // send the notes and status as our data object
+      data: { cardData }
+    })
+      .then(res => setCardData(res.data))
+      .catch('Error', console.error)
+  }
+  console.log(cardData)
 
   return (
     <div>
@@ -21,7 +58,6 @@ const KanbanBoard = props => {
           <div className="col-md" id="kanban-column">
             <h4>To Do</h4>
             <hr/>
-
             {/* On button click, set modalIsOpen state to true to open modal  */}
             <Button onClick={handleShow}> Add a to do </Button>
             {/* When clicked outside of modal, set modalIsOpen to false  */}
@@ -33,14 +69,29 @@ const KanbanBoard = props => {
                 {
                   overlay: {
                     backgroundColor: 'rgba(169, 169, 169, 0.7)'
+                  },
+                  content: {
+                    left: '150px',
+                    right: '150px',
+                    bottom: '550px',
+                    padding: '15px'
                   }
                 }
               }>
               <h2> Add a Card </h2>
-              <p> Insert Note </p>
+              <div className="form-group">
+                <label htmlFor="add-card-text" className="col-form-label">Message:</label>
+                <textarea
+                  className="form-control"
+                  id="add-card-text"
+                  value={cardData.notes}
+                  onChange={handleChange}
+                />
+                {/* <input type="submit" value="Submit">CREATE</input> */}
+              </div>
               <ModalFooter>
                 <Button onClick={handleClose}> Close </Button>
-                <Button> Create Card </Button>
+                <Button onClick={handleCreate}> Create Card </Button>
               </ModalFooter>
             </Modal>
           </div>
@@ -77,3 +128,14 @@ export default KanbanBoard
 //     </Button>
 //   </Modal.Footer>
 // </Modal>
+
+// <h4>Status</h4>
+// <div className="radio">
+//   <input type="radio" name="optradio" checked>To-Do</input>
+// </div>
+// <div className="radio">
+//   <input type="radio" name="optradio">In Progress</input>
+// </div>
+// <div className="radio disabled">
+//   <input type="radio" name="optradio" disabled>Complete</input>
+// </div>
