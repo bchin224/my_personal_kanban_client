@@ -10,6 +10,9 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 2/18
 - Updated url's on auth routes
 - Fixed token passing for authenticated components
+- Added columns for Kanban Board
+- Build button for adding cards
+- Got React Modal to open and close through button click
 
 
 ## Technologies

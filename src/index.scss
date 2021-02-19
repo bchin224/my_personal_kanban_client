@@ -1,1 +1,15 @@
 @import '~bootstrap/scss/bootstrap';
+
+#kanban-board {
+  border: 1px solid black;
+  width: 95%;
+  margin: 0 3%;
+}
+
+#kanban-column {
+  background-color: #d4d4d4;
+  border: 1px solid black;
+  margin: 10px;
+  height: 70vh;
+  text-align: center;
+}
