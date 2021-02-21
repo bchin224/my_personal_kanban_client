@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react'
-// import KanbanBoard from '../KanbanBoard/KanbanBoard'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
+import Dropdown from 'react-bootstrap/Dropdown'
 import Modal from 'react-modal'
 import ModalFooter from 'react-bootstrap/ModalFooter'
 import apiUrl from '../../apiConfig'
 import axios from 'axios'
-// import { ToDoColumn, InProgressColumn, CompletedColumn } from '../KanbanColumn/KanbanColumn'
-// import ToDoColumn from '../KanbanColumn/KanbanColumn'
 
 // // Prevents modal element error in console
 Modal.setAppElement('#root')
 
-// MAKE CARDS PLURAL AND ADD LOGIC TO DETERMINE WHERE EACH CARD SHOULD GO
 const KanbanCardIndex = data => {
   const [cards, setCards] = useState([])
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -33,7 +30,6 @@ const KanbanCardIndex = data => {
       }
     })
       // res.data.cards is the array of cards created
-      // .then(res => console.log('This is data:', res.data.cards))
       .then(res => setCards(res.data.cards))
       // .then(res => setCard(res.cardData))
       .catch('Error', console.error)
@@ -49,10 +45,23 @@ const KanbanCardIndex = data => {
       return editedCard
     })
   }
+
+  // handle changing card.status to selected dropdown
+  const handleStatus = event => {
+    // console.log('Status return,', event)
+    // event.persist()
+    setCard(prevCardData => {
+      // event is the eventKey
+      const updatedStatus = { 'status': event }
+      const editedStatus = Object.assign({}, prevCardData, updatedStatus)
+      return editedStatus
+    })
+  }
+
   // When create button is clicked, send data from modal to API
   const handleCreate = () => {
-    console.log('This is user data', data.user)
-    console.log('This is card data', { card })
+    // console.log('This is user data', data.user)
+    // console.log('This is card data', { card })
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/',
@@ -64,19 +73,18 @@ const KanbanCardIndex = data => {
       // send the notes and status as our data object
       data: { card }
     })
-      .then(res => console.log('This is data:', res.card))
+      // .then(res => console.log('This is data:', res.card))
       .then(() => setModalIsOpen(false))
       // .then(res => setCard(res.cardData))
       .catch('Error', console.error)
   }
 
   // When update button on modal is clicked, handle edits
-  const handleUpdate = (event) => {
-    console.log('This is user data', data.user)
-    console.log('This is card data', { card })
+  const handleUpdate = () => {
+    // console.log('This is card data', { card })
     event.preventDefault()
     axios({
-      url: apiUrl + '/cards/' + event.target.dataset.cardsid,
+      url: apiUrl + '/cards/' + event.target.dataset.cardsid + '/',
       method: 'PATCH',
       headers: {
         // we need the user so we have access to their token
@@ -91,9 +99,8 @@ const KanbanCardIndex = data => {
   }
 
   // When delete button on modal is clicked, delete card
-  const handleDelete = (event) => {
-    // FIGURE OUT HOW TO GET THE ID ON THE END
-    console.log('Event target info: ', event.target.dataset.cardsid)
+  const handleDelete = () => {
+    // console.log('Event target info: ', event.target.dataset.cardsid)
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/' + event.target.dataset.cardsid,
@@ -210,9 +217,19 @@ const KanbanCardIndex = data => {
                         />
                       </div>
                       <ModalFooter>
+                        <Dropdown>
+                          <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            Status
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='to-do'>To-Do</Dropdown.Item>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='WIP'>In Progress</Dropdown.Item>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='completed'>Completed</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                        <Button onClick={handleUpdate} variant="success" data-cardsid={cards.id}> Update </Button>
+                        <Button onClick={handleDelete} variant="success" data-cardsid={cards.id}> Delete </Button>
                         <Button onClick={editModalClose}> Close </Button>
-                        <Button onClick={handleUpdate}> Update </Button>
-                        <Button onClick={handleDelete} data-cardsid={cards.id}> Delete </Button>
                       </ModalFooter>
                     </Modal>
                   </Card>)
@@ -226,107 +243,3 @@ const KanbanCardIndex = data => {
 }
 
 export default KanbanCardIndex
-
-// <div className="radio">
-//   <input type="radio" name="optradio">To-Do</input>
-// </div>
-// <div className="radio">
-//   <label>
-//     <input type="radio" name="optradio">In Progress</input>
-//   </label>
-// </div>
-// <div className="radio disabled">
-//   <label><input type="radio" name="optradio">Completed</input></label>
-// </div>
-
-// import React, { useState } from 'react'
-// import Button from 'react-bootstrap/Button'
-// import Modal from 'react-modal'
-// import ModalFooter from 'react-bootstrap/ModalFooter'
-// import apiUrl from '../../apiConfig'
-// import axios from 'axios'
-//
-// // Prevents modal element error in console
-// Modal.setAppElement('#root')
-//
-// // MAKE CARDS PLURAL AND ADD LOGIC TO DETERMINE WHERE EACH CARD SHOULD GO
-// const KanbanBoard = data => {
-//   const [modalIsOpen, setModalIsOpen] = useState(false)
-//   const [card, setCard] = useState({ notes: '', status: 'to-do' })
-//   const handleClose = () => setModalIsOpen(false)
-//   const handleShow = () => setModalIsOpen(true)
-//
-//   // handle changing card.notes to textarea input
-//   const handleChange = event => {
-//     event.persist()
-//     setCard(prevCardData => {
-//       // event.target.value is each letter typed into the textarea
-//       const updatedField = { 'notes': event.target.value }
-//       const editedCard = Object.assign({}, prevCardData, updatedField)
-//       return editedCard
-//     })
-//   }
-//   // When create button is clicked, send data from modal to API
-//   const handleCreate = () => {
-//     console.log('This is user data', data.user)
-//     console.log('This is card data', { card })
-//     event.preventDefault()
-//     axios({
-//       url: apiUrl + '/cards/',
-//       method: 'POST',
-//       headers: {
-//         // we need the user so we have access to their token
-//         'Authorization': `Token ${data.user.token}`
-//       },
-//       // send the notes and status as our data object
-//       data: { card }
-//     })
-//       .then(res => console.log('This is data:', res.card))
-//       .then(() => setModalIsOpen(false))
-//       // .then(res => setCard(res.cardData))
-//       .catch('Error', console.error)
-//   }
-//
-//   return (
-//     <div>
-//       <p>Modal</p>
-//       {/* On button click, set modalIsOpen state to true to open modal  */}
-//       <Button onClick={handleShow}> Add a to do </Button>
-//       {/* When clicked outside of modal, set modalIsOpen to false  */}
-//       <Modal
-//         isOpen={modalIsOpen}
-//         onRequestClose={handleClose}
-//         animation={true}
-//         style={
-//           {
-//             overlay: {
-//               backgroundColor: 'rgba(169, 169, 169, 0.7)'
-//             },
-//             content: {
-//               left: '150px',
-//               right: '150px',
-//               bottom: '300px',
-//               padding: '15px'
-//             }
-//           }
-//         }>
-//         <h2> Add a Card </h2>
-//         <div className="form-group">
-//           <label htmlFor="add-card-text" className="col-form-label">Message:</label>
-//           <textarea
-//             className="form-control"
-//             id="add-card-text"
-//             value={card.notes}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         <ModalFooter>
-//           <Button onClick={handleClose}> Close </Button>
-//           <Button onClick={handleCreate}> Create Card </Button>
-//         </ModalFooter>
-//       </Modal>
-//     </div>
-//   )
-// }
-//
-// export default KanbanBoard
