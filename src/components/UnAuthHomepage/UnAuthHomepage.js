@@ -14,7 +14,8 @@ class UnAuthHomepage extends Component {
   render () {
     return (
       <div>
-        <p>This is the unauthenticated homepage</p>
+        <p id="unauth-home">Welcome! Sign up or sign in to start adding cards to your
+        personal kanban board!</p>
       </div>
     )
   }

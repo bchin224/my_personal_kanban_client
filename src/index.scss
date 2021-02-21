@@ -1,9 +1,18 @@
 @import '~bootstrap/scss/bootstrap';
 
+#unauth-home {
+  text-align: center;
+  margin: 15px;
+}
+
+h4 {
+  margin-top: 10px;
+}
+
 #kanban-board {
   border: 1px solid black;
   width: 95%;
-  margin: 0 3%;
+  margin: 5%;
 }
 
 #kanban-column {
@@ -12,4 +21,9 @@
   margin: 15px;
   height: 70vh;
   text-align: center;
+}
+
+ul {
+  padding: 0;
+  // box-shadow: 5px 10px 8px #888888;
 }

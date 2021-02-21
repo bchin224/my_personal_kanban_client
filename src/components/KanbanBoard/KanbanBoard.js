@@ -35,6 +35,18 @@ const KanbanCardIndex = data => {
       .catch('Error', console.error)
   }, [])
 
+  // handle changing card.status to selected dropdown
+  const handleStatus = event => {
+    // console.log('Status return,', event)
+    // event.preventDefault()
+    setCard(prevCardStatus => {
+      // event is the eventKey
+      const updatedStatus = { 'status': event }
+      const editedStatus = Object.assign({}, prevCardStatus, updatedStatus)
+      return editedStatus
+    })
+  }
+
   // handle changing card.notes to textarea input
   const handleChange = event => {
     event.persist()
@@ -43,18 +55,6 @@ const KanbanCardIndex = data => {
       const updatedField = { 'notes': event.target.value }
       const editedCard = Object.assign({}, prevCardData, updatedField)
       return editedCard
-    })
-  }
-
-  // handle changing card.status to selected dropdown
-  const handleStatus = event => {
-    // console.log('Status return,', event)
-    // event.persist()
-    setCard(prevCardData => {
-      // event is the eventKey
-      const updatedStatus = { 'status': event }
-      const editedStatus = Object.assign({}, prevCardData, updatedStatus)
-      return editedStatus
     })
   }
 
@@ -93,7 +93,6 @@ const KanbanCardIndex = data => {
       // send the notes and status as our data object
       data: { card }
     })
-      .then(res => console.log('This is data:', res.card))
       .then(() => setEditModalIsOpen(false))
       .catch('Error', console.error)
   }
@@ -120,9 +119,10 @@ const KanbanCardIndex = data => {
       <div className="container">
         <div className="row" id="kanban-board">
           <div className="col-md" id="kanban-column">
-            <h4>To Do</h4>
-            <Button onClick={handleShow}> Add a to do </Button>
-            {/* When clicked outside of modal, set modalIsOpen to false  */}
+            <div id="to-do-title">
+              <h4>To Do</h4>
+              <Button onClick={handleShow}> Add a to do </Button>
+            </div>
             <Modal
               isOpen={modalIsOpen}
               onRequestClose={handleClose}
@@ -159,40 +159,13 @@ const KanbanCardIndex = data => {
             <ul>
               {
                 cards.filter(card => card.status === 'to-do').map(cards =>
-                  <Card key={cards.id} style={{ width: '8rem' }}>
+                  <Card key={cards.id} style={{ width: '100%' }} border="danger" className='mt-3'>
                     {cards.notes}
-                    <Button variant="primary" size="sm">Edit</Button>
-                  </Card>)
-              }
-            </ul>
-          </div>
-          <div className="col-md" id="kanban-column">
-            <h4>In Progress</h4>
-            <hr/>
-            <ul>
-              {
-                cards.filter(card => card.status === 'WIP').map(cards =>
-                  <Card key={cards.id} style={{ width: '8rem' }}>
-                    {cards.notes}
-                    <Button variant="primary" size="sm">Edit</Button>
-                  </Card>)
-              }
-            </ul>
-          </div>
-          <div className="col-md" id="kanban-column">
-            <h4>Completed</h4>
-            <hr/>
-            <ul>
-              {
-                cards.filter(card => card.status === 'completed').map(cards =>
-                  <Card key={cards.id} style={{ width: '8rem' }}>
-                    {cards.notes}
-                    <Button onClick={editModalShow}> Edit </Button>
+                    <Button onClick={editModalShow} variant="danger"> Edit </Button>
                     {/* When clicked outside of modal, set modalIsOpen to false  */}
                     <Modal
                       isOpen={editModalIsOpen}
                       onRequestClose={editModalClose}
-                      animation={true}
                       style={
                         {
                           overlay: {
@@ -228,7 +201,124 @@ const KanbanCardIndex = data => {
                           </Dropdown.Menu>
                         </Dropdown>
                         <Button onClick={handleUpdate} variant="success" data-cardsid={cards.id}> Update </Button>
-                        <Button onClick={handleDelete} variant="success" data-cardsid={cards.id}> Delete </Button>
+                        <Button onClick={handleDelete} data-cardsid={cards.id}> Delete </Button>
+                        <Button onClick={editModalClose}> Close </Button>
+                      </ModalFooter>
+                    </Modal>
+                  </Card>
+                )
+              }
+            </ul>
+          </div>
+          <div className="col-md" id="kanban-column">
+            <div id="in-progress-title">
+              <h4>In Progress</h4>
+            </div>
+            <hr/>
+            <ul>
+              {
+                cards.filter(card => card.status === 'WIP').map(cards =>
+                  <Card key={cards.id} style={{ width: '100%' }} border="warning" className='mt-3'>
+                    {cards.notes}
+                    <Button onClick={editModalShow} variant="warning"> Edit </Button>
+                    {/* When clicked outside of modal, set modalIsOpen to false  */}
+                    <Modal
+                      isOpen={editModalIsOpen}
+                      onRequestClose={editModalClose}
+                      style={
+                        {
+                          overlay: {
+                            backgroundColor: 'rgba(169, 169, 169, 0.7)'
+                          },
+                          content: {
+                            left: '150px',
+                            right: '150px',
+                            bottom: '300px',
+                            padding: '15px'
+                          }
+                        }
+                      }>
+                      <h2> Update or Delete Card </h2>
+                      <div className="form-group">
+                        <label htmlFor="add-card-text" className="col-form-label">Message:</label>
+                        <textarea
+                          className="form-control"
+                          id="add-card-text"
+                          value={card.notes}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <ModalFooter>
+                        <Dropdown>
+                          <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            Status
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='to-do'>To-Do</Dropdown.Item>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='WIP'>In Progress</Dropdown.Item>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='completed'>Completed</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                        <Button onClick={handleUpdate} variant="success" data-cardsid={cards.id}> Update </Button>
+                        <Button onClick={handleDelete} data-cardsid={cards.id}> Delete </Button>
+                        <Button onClick={editModalClose}> Close </Button>
+                      </ModalFooter>
+                    </Modal>
+                  </Card>)
+              }
+            </ul>
+          </div>
+          <div className="col-md" id="kanban-column">
+            <div id="completed-title">
+              <h4>Completed</h4>
+            </div>
+            <hr/>
+            <ul>
+              {
+                cards.filter(card => card.status === 'completed').map(cards =>
+                  <Card key={cards.id} style={{ width: '100%' }} border="success" className='mt-3'>
+                    {cards.notes}
+                    <Button onClick={editModalShow} variant="success"> Edit </Button>
+                    {/* When clicked outside of modal, set modalIsOpen to false  */}
+                    <Modal
+                      isOpen={editModalIsOpen}
+                      onRequestClose={editModalClose}
+                      style={
+                        {
+                          overlay: {
+                            backgroundColor: 'rgba(169, 169, 169, 0.7)'
+                          },
+                          content: {
+                            left: '150px',
+                            right: '150px',
+                            bottom: '300px',
+                            padding: '15px'
+                          }
+                        }
+                      }>
+                      <h2> Update or Delete Card </h2>
+                      <div className="form-group">
+                        <label htmlFor="add-card-text" className="col-form-label">Message:</label>
+                        <textarea
+                          className="form-control"
+                          id="add-card-text"
+                          value={card.notes}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <ModalFooter>
+                        <Dropdown>
+                          <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            Status
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='to-do'>To-Do</Dropdown.Item>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='WIP'>In Progress</Dropdown.Item>
+                            <Dropdown.Item onSelect={handleStatus} eventKey='completed'>Completed</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                        <Button onClick={handleUpdate} variant="success" data-cardsid={cards.id}> Update </Button>
+                        <Button onClick={handleDelete} data-cardsid={cards.id}> Delete </Button>
                         <Button onClick={editModalClose}> Close </Button>
                       </ModalFooter>
                     </Modal>
