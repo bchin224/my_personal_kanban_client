@@ -9,6 +9,9 @@ import axios from 'axios'
 // import { ToDoColumn, InProgressColumn, CompletedColumn } from '../KanbanColumn/KanbanColumn'
 // import ToDoColumn from '../KanbanColumn/KanbanColumn'
 
+// // Prevents modal element error in console
+Modal.setAppElement('#root')
+
 // MAKE CARDS PLURAL AND ADD LOGIC TO DETERMINE WHERE EACH CARD SHOULD GO
 const KanbanCardIndex = data => {
   const [cards, setCards] = useState([])
@@ -32,18 +35,6 @@ const KanbanCardIndex = data => {
       // .then(res => setCard(res.cardData))
       .catch('Error', console.error)
   }, [])
-
-  // const FilterCards = (res) => {
-  //   console.log('Filter data', res)
-  //   const filtered = cards.filter(cards => cards.status === 'to-do')
-  //   console.log('This is filtered:', filtered)
-  //   filtered.map(cards =>
-  //     <Card key={cards.id} style={{ width: '8rem' }}>
-  //       {cards.notes}
-  //       <Button variant="primary" size="sm">Edit</Button>
-  //       <Button variant="primary" size="sm">Delete</Button>
-  //     </Card>)
-  // }
 
   // handle changing card.notes to textarea input
   const handleChange = event => {
