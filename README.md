@@ -20,6 +20,15 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 - Renamed all cardData to card to match the django card_views.py
 - Successfully made axios POST request to create a card
 
+2/20
+- Successfully index all cards
+- Successfully filtered all cards into respective columns
+
+2/21
+- Added update card functionality
+- Successfully delete a card functionality
+- Began styling for board, column and cards
+
 
 ## Technologies
 * HTML/SCSS
