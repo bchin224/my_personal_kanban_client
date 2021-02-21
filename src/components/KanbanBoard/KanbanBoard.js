@@ -16,9 +16,12 @@ Modal.setAppElement('#root')
 const KanbanCardIndex = data => {
   const [cards, setCards] = useState([])
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false)
   const [card, setCard] = useState({ notes: '', status: 'to-do' })
   const handleClose = () => setModalIsOpen(false)
   const handleShow = () => setModalIsOpen(true)
+  const editModalShow = () => setEditModalIsOpen(true)
+  const editModalClose = () => setEditModalIsOpen(false)
 
   useEffect(() => {
     axios({
@@ -64,6 +67,44 @@ const KanbanCardIndex = data => {
       .then(res => console.log('This is data:', res.card))
       .then(() => setModalIsOpen(false))
       // .then(res => setCard(res.cardData))
+      .catch('Error', console.error)
+  }
+
+  // When update button on modal is clicked, handle edits
+  const handleUpdate = (event) => {
+    console.log('This is user data', data.user)
+    console.log('This is card data', { card })
+    event.preventDefault()
+    axios({
+      url: apiUrl + '/cards/' + event.target.dataset.cardsid,
+      method: 'PATCH',
+      headers: {
+        // we need the user so we have access to their token
+        'Authorization': `Token ${data.user.token}`
+      },
+      // send the notes and status as our data object
+      data: { card }
+    })
+      .then(res => console.log('This is data:', res.card))
+      .then(() => setEditModalIsOpen(false))
+      .catch('Error', console.error)
+  }
+
+  // When delete button on modal is clicked, delete card
+  const handleDelete = (event) => {
+    // FIGURE OUT HOW TO GET THE ID ON THE END
+    console.log('Event target info: ', event.target.dataset.cardsid)
+    event.preventDefault()
+    axios({
+      url: apiUrl + '/cards/' + event.target.dataset.cardsid,
+      method: 'DELETE',
+      headers: {
+        // we need the user so we have access to their token
+        'Authorization': `Token ${data.user.token}`
+      }
+    })
+      .then(res => console.log('This is data:', res.card))
+      .then(() => setEditModalIsOpen(false))
       .catch('Error', console.error)
   }
 
@@ -114,7 +155,6 @@ const KanbanCardIndex = data => {
                   <Card key={cards.id} style={{ width: '8rem' }}>
                     {cards.notes}
                     <Button variant="primary" size="sm">Edit</Button>
-                    <Button variant="primary" size="sm">Delete</Button>
                   </Card>)
               }
             </ul>
@@ -128,7 +168,6 @@ const KanbanCardIndex = data => {
                   <Card key={cards.id} style={{ width: '8rem' }}>
                     {cards.notes}
                     <Button variant="primary" size="sm">Edit</Button>
-                    <Button variant="primary" size="sm">Delete</Button>
                   </Card>)
               }
             </ul>
@@ -141,8 +180,41 @@ const KanbanCardIndex = data => {
                 cards.filter(card => card.status === 'completed').map(cards =>
                   <Card key={cards.id} style={{ width: '8rem' }}>
                     {cards.notes}
-                    <Button variant="primary" size="sm">Edit</Button>
-                    <Button variant="primary" size="sm">Delete</Button>
+                    <Button onClick={editModalShow}> Edit </Button>
+                    {/* When clicked outside of modal, set modalIsOpen to false  */}
+                    <Modal
+                      isOpen={editModalIsOpen}
+                      onRequestClose={editModalClose}
+                      animation={true}
+                      style={
+                        {
+                          overlay: {
+                            backgroundColor: 'rgba(169, 169, 169, 0.7)'
+                          },
+                          content: {
+                            left: '150px',
+                            right: '150px',
+                            bottom: '300px',
+                            padding: '15px'
+                          }
+                        }
+                      }>
+                      <h2> Update or Delete Card </h2>
+                      <div className="form-group">
+                        <label htmlFor="add-card-text" className="col-form-label">Message:</label>
+                        <textarea
+                          className="form-control"
+                          id="add-card-text"
+                          value={card.notes}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <ModalFooter>
+                        <Button onClick={editModalClose}> Close </Button>
+                        <Button onClick={handleUpdate}> Update </Button>
+                        <Button onClick={handleDelete} data-cardsid={cards.id}> Delete </Button>
+                      </ModalFooter>
+                    </Modal>
                   </Card>)
               }
             </ul>
@@ -154,6 +226,18 @@ const KanbanCardIndex = data => {
 }
 
 export default KanbanCardIndex
+
+// <div className="radio">
+//   <input type="radio" name="optradio">To-Do</input>
+// </div>
+// <div className="radio">
+//   <label>
+//     <input type="radio" name="optradio">In Progress</input>
+//   </label>
+// </div>
+// <div className="radio disabled">
+//   <label><input type="radio" name="optradio">Completed</input></label>
+// </div>
 
 // import React, { useState } from 'react'
 // import Button from 'react-bootstrap/Button'
