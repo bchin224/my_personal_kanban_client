@@ -11,6 +11,7 @@ import SignOut from './components/SignOut/SignOut'
 import ChangePassword from './components/ChangePassword/ChangePassword'
 import UnAuthHomepage from './components/UnAuthHomepage/UnAuthHomepage'
 import KanbanBoard from './components/KanbanBoard/KanbanBoard'
+// import KanbanCardIndex from './components/KanbanCardIndex/KanbanCardIndex'
 
 class App extends Component {
   constructor (props) {
@@ -70,6 +71,9 @@ class App extends Component {
           <AuthenticatedRoute user={user} path='/home' render={() => (
             <KanbanBoard msgAlert={this.msgAlert} user={user} />
           )} />
+          {/* <AuthenticatedRoute user={user} path='/cards' render={() => (
+            <KanbanCardIndex msgAlert={this.msgAlert} user={user} />
+          )} /> */}
         </main>
         <Route user={user} exact path='/' render={() => (
           <UnAuthHomepage user={user} />
