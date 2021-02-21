@@ -33,6 +33,18 @@ const KanbanCardIndex = data => {
       .catch('Error', console.error)
   }, [])
 
+  // const FilterCards = (res) => {
+  //   console.log('Filter data', res)
+  //   const filtered = cards.filter(cards => cards.status === 'to-do')
+  //   console.log('This is filtered:', filtered)
+  //   filtered.map(cards =>
+  //     <Card key={cards.id} style={{ width: '8rem' }}>
+  //       {cards.notes}
+  //       <Button variant="primary" size="sm">Edit</Button>
+  //       <Button variant="primary" size="sm">Delete</Button>
+  //     </Card>)
+  // }
+
   // handle changing card.notes to textarea input
   const handleChange = event => {
     event.persist()
@@ -107,13 +119,12 @@ const KanbanCardIndex = data => {
             <hr/>
             <ul>
               {
-                cards.map(cards =>
-                  <Card key={cards.id} style={{ width: '10rem' }}>
+                cards.filter(card => card.status === 'to-do').map(cards =>
+                  <Card key={cards.id} style={{ width: '8rem' }}>
                     {cards.notes}
                     <Button variant="primary" size="sm">Edit</Button>
                     <Button variant="primary" size="sm">Delete</Button>
                   </Card>)
-                // <li key={cards.id}>{cards.notes}</li>)
               }
             </ul>
           </div>
