@@ -119,42 +119,7 @@ const KanbanCardIndex = data => {
       <div className="container">
         <div className="row" id="kanban-board">
           <div className="col-md" id="kanban-column">
-            <div id="to-do-title">
-              <h4>To Do</h4>
-              <Button onClick={handleShow}> Add a to do </Button>
-            </div>
-            <Modal
-              isOpen={modalIsOpen}
-              onRequestClose={handleClose}
-              animation={true}
-              style={
-                {
-                  overlay: {
-                    backgroundColor: 'rgba(169, 169, 169, 0.7)'
-                  },
-                  content: {
-                    left: '150px',
-                    right: '150px',
-                    bottom: '300px',
-                    padding: '15px'
-                  }
-                }
-              }>
-              <h2> Add a Card </h2>
-              <div className="form-group">
-                <label htmlFor="add-card-text" className="col-form-label">Message:</label>
-                <textarea
-                  className="form-control"
-                  id="add-card-text"
-                  value={card.notes}
-                  onChange={handleChange}
-                />
-              </div>
-              <ModalFooter>
-                <Button onClick={handleClose}> Close </Button>
-                <Button onClick={handleCreate}> Create Card </Button>
-              </ModalFooter>
-            </Modal>
+            <h4>To Do</h4>
             <hr/>
             <ul>
               {
@@ -209,6 +174,39 @@ const KanbanCardIndex = data => {
                 )
               }
             </ul>
+            <Button onClick={handleShow}> Add a to do </Button>
+            <Modal
+              isOpen={modalIsOpen}
+              onRequestClose={handleClose}
+              animation={true}
+              style={
+                {
+                  overlay: {
+                    backgroundColor: 'rgba(169, 169, 169, 0.7)'
+                  },
+                  content: {
+                    left: '150px',
+                    right: '150px',
+                    bottom: '300px',
+                    padding: '15px'
+                  }
+                }
+              }>
+              <h2> Add a Card </h2>
+              <div className="form-group">
+                <label htmlFor="add-card-text" className="col-form-label">Message:</label>
+                <textarea
+                  className="form-control"
+                  id="add-card-text"
+                  value={card.notes}
+                  onChange={handleChange}
+                />
+              </div>
+              <ModalFooter>
+                <Button onClick={handleClose}> Close </Button>
+                <Button onClick={handleCreate}> Create Card </Button>
+              </ModalFooter>
+            </Modal>
           </div>
           <div className="col-md" id="kanban-column">
             <div id="in-progress-title">
