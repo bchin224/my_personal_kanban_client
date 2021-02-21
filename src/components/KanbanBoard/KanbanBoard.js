@@ -133,8 +133,8 @@ const KanbanCardIndex = data => {
             <hr/>
             <ul>
               {
-                cards.map(cards =>
-                  <Card key={cards.id} style={{ width: '10rem' }}>
+                cards.filter(card => card.status === 'WIP').map(cards =>
+                  <Card key={cards.id} style={{ width: '8rem' }}>
                     {cards.notes}
                     <Button variant="primary" size="sm">Edit</Button>
                     <Button variant="primary" size="sm">Delete</Button>
@@ -147,8 +147,8 @@ const KanbanCardIndex = data => {
             <hr/>
             <ul>
               {
-                cards.map(cards =>
-                  <Card key={cards.id} style={{ width: '10rem' }}>
+                cards.filter(card => card.status === 'completed').map(cards =>
+                  <Card key={cards.id} style={{ width: '8rem' }}>
                     {cards.notes}
                     <Button variant="primary" size="sm">Edit</Button>
                     <Button variant="primary" size="sm">Delete</Button>
