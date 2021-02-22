@@ -16,7 +16,11 @@ const KanbanCardIndex = data => {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
   const [editModalId, setEditModalId] = useState(null)
   const [card, setCard] = useState({ notes: '', status: 'to-do' })
-  const handleClose = () => setModalIsOpen(false)
+  // whenever a modal closes, clear the fields
+  const handleClose = () => {
+    setModalIsOpen(false)
+    setCard({ notes: '', status: 'to-do' })
+  }
   const handleShow = () => setModalIsOpen(true)
   const editModalShow = (id) => {
     setEditModalIsOpen(true)
