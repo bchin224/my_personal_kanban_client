@@ -11,7 +11,7 @@ import SignOut from './components/SignOut/SignOut'
 import ChangePassword from './components/ChangePassword/ChangePassword'
 import UnAuthHomepage from './components/UnAuthHomepage/UnAuthHomepage'
 import KanbanBoard from './components/KanbanBoard/KanbanBoard'
-// import KanbanCardIndex from './components/KanbanCardIndex/KanbanCardIndex'
+import Footer from './components/Footer/Footer'
 
 class App extends Component {
   constructor (props) {
@@ -78,6 +78,7 @@ class App extends Component {
         <Route user={user} exact path='/' render={() => (
           <UnAuthHomepage user={user} />
         )} />
+        <Footer/>
       </Fragment>
     )
   }

@@ -14,13 +14,20 @@ const KanbanCardIndex = data => {
   const [cards, setCards] = useState([])
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
+  const [editModalId, setEditModalId] = useState(null)
   const [card, setCard] = useState({ notes: '', status: 'to-do' })
   const handleClose = () => setModalIsOpen(false)
   const handleShow = () => setModalIsOpen(true)
-  const editModalShow = () => setEditModalIsOpen(true)
-  const editModalClose = () => setEditModalIsOpen(false)
+  const editModalShow = (id) => {
+    setEditModalIsOpen(true)
+    setEditModalId(id)
+  }
+  const editModalClose = () => {
+    setEditModalIsOpen(false)
+    setEditModalId(null)
+  }
 
-  useEffect(() => {
+  const fetchCards = () => {
     axios({
       url: apiUrl + '/cards/',
       method: 'GET',
@@ -33,6 +40,10 @@ const KanbanCardIndex = data => {
       .then(res => setCards(res.data.cards))
       // .then(res => setCard(res.cardData))
       .catch('Error', console.error)
+  }
+
+  useEffect(() => {
+    fetchCards()
   }, [])
 
   // handle changing card.status to selected dropdown
@@ -75,13 +86,14 @@ const KanbanCardIndex = data => {
     })
       // .then(res => console.log('This is data:', res.card))
       .then(() => setModalIsOpen(false))
+      .then(() => fetchCards())
       // .then(res => setCard(res.cardData))
       .catch('Error', console.error)
   }
 
   // When update button on modal is clicked, handle edits
   const handleUpdate = () => {
-    // console.log('This is card data', { card })
+    console.log('Before event card id', event.target.dataset.cardsid)
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/' + event.target.dataset.cardsid + '/',
@@ -94,6 +106,7 @@ const KanbanCardIndex = data => {
       data: { card }
     })
       .then(() => setEditModalIsOpen(false))
+      .then(() => fetchCards())
       .catch('Error', console.error)
   }
 
@@ -111,6 +124,7 @@ const KanbanCardIndex = data => {
     })
       .then(res => console.log('This is data:', res.card))
       .then(() => setEditModalIsOpen(false))
+      .then(() => fetchCards())
       .catch('Error', console.error)
   }
 
@@ -126,10 +140,10 @@ const KanbanCardIndex = data => {
                 cards.filter(card => card.status === 'to-do').map(cards =>
                   <Card key={cards.id} style={{ width: '100%' }} border="danger" className='mt-3'>
                     {cards.notes}
-                    <Button onClick={editModalShow} variant="danger"> Edit </Button>
+                    <Button onClick={() => editModalShow(cards.id)} variant="danger"> Edit </Button>
                     {/* When clicked outside of modal, set modalIsOpen to false  */}
                     <Modal
-                      isOpen={editModalIsOpen}
+                      isOpen={editModalIsOpen && editModalId === cards.id}
                       onRequestClose={editModalClose}
                       style={
                         {
@@ -218,10 +232,10 @@ const KanbanCardIndex = data => {
                 cards.filter(card => card.status === 'WIP').map(cards =>
                   <Card key={cards.id} style={{ width: '100%' }} border="warning" className='mt-3'>
                     {cards.notes}
-                    <Button onClick={editModalShow} variant="warning"> Edit </Button>
+                    <Button onClick={() => editModalShow(cards.id)} variant="warning"> Edit </Button>
                     {/* When clicked outside of modal, set modalIsOpen to false  */}
                     <Modal
-                      isOpen={editModalIsOpen}
+                      isOpen={editModalIsOpen && editModalId === cards.id}
                       onRequestClose={editModalClose}
                       style={
                         {
@@ -276,10 +290,10 @@ const KanbanCardIndex = data => {
                 cards.filter(card => card.status === 'completed').map(cards =>
                   <Card key={cards.id} style={{ width: '100%' }} border="success" className='mt-3'>
                     {cards.notes}
-                    <Button onClick={editModalShow} variant="success"> Edit </Button>
+                    <Button onClick={() => editModalShow(cards.id)} variant="success"> Edit </Button>
                     {/* When clicked outside of modal, set modalIsOpen to false  */}
                     <Modal
-                      isOpen={editModalIsOpen}
+                      isOpen={editModalIsOpen && editModalId === cards.id}
                       onRequestClose={editModalClose}
                       style={
                         {

@@ -29,6 +29,12 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 - Successfully delete a card functionality
 - Began styling for board, column and cards
 
+2/22
+- Changed browser title icon
+- Adjusted background color to gradient
+- Edit and delete buttons now identify the correct resource
+- Changed index call to a function that can be called after every other call (refresh)
+
 
 ## Technologies
 * HTML/SCSS
