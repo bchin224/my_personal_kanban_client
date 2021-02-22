@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
+import mpkLogo from '../../assets/mpk_logo.png'
 
 const authenticatedOptions = (
   <Fragment>
@@ -24,8 +25,8 @@ const alwaysOptions = (
 
 const Header = ({ user }) => (
   <Navbar bg="primary" variant="dark" expand="md">
-    <Navbar.Brand href="#">
-      My Personal Kanban
+    <Navbar.Brand href="#" id="header-title">
+      <img src={mpkLogo} width="400"></img>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
