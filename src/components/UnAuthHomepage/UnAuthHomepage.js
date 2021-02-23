@@ -23,11 +23,11 @@ class UnAuthHomepage extends Component {
               Welcome! Sign up or sign in to start adding cards to your personal kanban board!
             </div>
             <div className="col" id="unauth-home">
-              <img src={modalBoard} alt="View your kanban board" width="300"/>
+              <img src={modalBoard} alt="View your kanban board" width="300" id="screenshot"/>
               <p className="image-notes"> View all of your daily tasks, see what projects are being worked on, and which are all done! </p>
             </div>
             <div className="col" id="unauth-home">
-              <img src={modalImage} alt="Edit kanban cards" width="300"/>
+              <img src={modalImage} alt="Edit kanban cards" width="300" id="screenshot"/>
               <p className="image-notes"> Easily update tasks as they begin production and when they are completed. </p>
             </div>
           </div>

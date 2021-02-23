@@ -1,6 +1,8 @@
 # My Personal Kanban Client
 My Personal Kanban is exactly that, your very own Kanban Board! You can add cards to your to-do list, move them to being in progress, and then file them under complete so you know when to start the next task. Great for project managers who use agile and scrum methodologies or for anyone who just likes to check things off their to-do list.
 
+![Imgur](https://i.imgur.com/XnKEwqR.png)
+
 ## Links
 
 ## Planning Process & Problem-Solving Strategy
@@ -35,6 +37,7 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 - Edit and delete buttons now identify the correct resource
 - Changed index call to a function that can be called after every other call (refresh)
 - Added background and images to unauthenticated homepage
+- Fixed footer alignment to the bottom of the screen
 
 
 ## Technologies

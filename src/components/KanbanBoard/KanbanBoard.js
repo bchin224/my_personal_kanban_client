@@ -6,6 +6,7 @@ import Modal from 'react-modal'
 import ModalFooter from 'react-bootstrap/ModalFooter'
 import apiUrl from '../../apiConfig'
 import axios from 'axios'
+import messages from '../AutoDismissAlert/messages'
 
 // // Prevents modal element error in console
 Modal.setAppElement('#root')
@@ -16,6 +17,7 @@ const KanbanCardIndex = data => {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false)
   const [editModalId, setEditModalId] = useState(null)
   const [card, setCard] = useState({ notes: '', status: 'to-do' })
+
   // whenever a modal closes, clear the fields
   const handleClose = () => {
     setModalIsOpen(false)
@@ -31,6 +33,8 @@ const KanbanCardIndex = data => {
     setEditModalId(null)
   }
 
+  const msgAlert = data.msgAlert
+
   const fetchCards = () => {
     axios({
       url: apiUrl + '/cards/',
@@ -42,8 +46,13 @@ const KanbanCardIndex = data => {
     })
       // res.data.cards is the array of cards created
       .then(res => setCards(res.data.cards))
-      // .then(res => setCard(res.cardData))
-      .catch('Error', console.error)
+      .catch(error => {
+        msgAlert({
+          heading: 'Failed to Load Your Kanban Cards: ' + error.message,
+          message: messages.indexFailure,
+          variant: 'danger'
+        })
+      })
   }
 
   useEffect(() => {
@@ -52,8 +61,6 @@ const KanbanCardIndex = data => {
 
   // handle changing card.status to selected dropdown
   const handleStatus = event => {
-    // console.log('Status return,', event)
-    // event.preventDefault()
     setCard(prevCardStatus => {
       // event is the eventKey
       const updatedStatus = { 'status': event }
@@ -75,8 +82,6 @@ const KanbanCardIndex = data => {
 
   // When create button is clicked, send data from modal to API
   const handleCreate = () => {
-    // console.log('This is user data', data.user)
-    // console.log('This is card data', { card })
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/',
@@ -88,16 +93,25 @@ const KanbanCardIndex = data => {
       // send the notes and status as our data object
       data: { card }
     })
-      // .then(res => console.log('This is data:', res.card))
       .then(() => setModalIsOpen(false))
       .then(() => fetchCards())
-      // .then(res => setCard(res.cardData))
-      .catch('Error', console.error)
+      .then(() => setCard({ notes: '', status: 'to-do' }))
+      .then(() => msgAlert({
+        heading: 'Kanban Card Created',
+        message: messages.createSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Failed to Create New Card: ' + error.message,
+          message: messages.createFailure,
+          variant: 'danger'
+        })
+      })
   }
 
   // When update button on modal is clicked, handle edits
   const handleUpdate = () => {
-    console.log('Before event card id', event.target.dataset.cardsid)
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/' + event.target.dataset.cardsid + '/',
@@ -111,31 +125,53 @@ const KanbanCardIndex = data => {
     })
       .then(() => setEditModalIsOpen(false))
       .then(() => fetchCards())
-      .catch('Error', console.error)
+      .then(() => setCard({ notes: '', status: 'to-do' }))
+      .then(() => msgAlert({
+        heading: 'Kanban Card Updated',
+        message: messages.updateSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Kanban Card Failed to Update: ' + error.message,
+          message: messages.updateFailure,
+          variant: 'danger'
+        })
+      })
   }
 
   // When delete button on modal is clicked, delete card
   const handleDelete = () => {
-    // console.log('Event target info: ', event.target.dataset.cardsid)
     event.preventDefault()
     axios({
       url: apiUrl + '/cards/' + event.target.dataset.cardsid,
       method: 'DELETE',
       headers: {
-        // we need the user so we have access to their token
         'Authorization': `Token ${data.user.token}`
       }
     })
-      .then(res => console.log('This is data:', res.card))
       .then(() => setEditModalIsOpen(false))
       .then(() => fetchCards())
-      .catch('Error', console.error)
+      .then(() => setCard({ notes: '', status: 'to-do' }))
+      .then(() => msgAlert({
+        heading: 'Kanban Card Deleted',
+        message: messages.deleteSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Failed to Delete Card: ' + error.message,
+          message: messages.deleteFailure,
+          variant: 'danger'
+        })
+      })
   }
 
   return (
     <div>
       <div className="container">
         <div className="row" id="kanban-board">
+          {/* ---------------------------- THE TO-DO COLUMN ---------------------------- */}
           <div className="col-md" id="kanban-column">
             <h4>To Do</h4>
             <hr/>
@@ -226,6 +262,7 @@ const KanbanCardIndex = data => {
               </ModalFooter>
             </Modal>
           </div>
+          {/* -------------------------- THE IN PROGRESS COLUMN -------------------------- */}
           <div className="col-md" id="kanban-column">
             <div id="in-progress-title">
               <h4>In Progress</h4>
@@ -284,6 +321,7 @@ const KanbanCardIndex = data => {
               }
             </ul>
           </div>
+          {/* -------------------------------- THE COMPLETED COLUMN -------------------------------- */}
           <div className="col-md" id="kanban-column">
             <div id="completed-title">
               <h4>Completed</h4>
