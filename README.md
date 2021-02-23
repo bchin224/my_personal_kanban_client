@@ -4,9 +4,9 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 ![Imgur](https://i.imgur.com/XnKEwqR.png)
 
 ## Links
-[Deployed Client](https://bchin224.github.io/my_personal_kanban_client/)
-[Backend Repo](https://github.com/bchin224/my_personal_kanban_api)
-[Deployed Backend](https://mypersonalkanban22321.herokuapp.com/)
+- [Deployed Client](https://bchin224.github.io/my_personal_kanban_client/)
+- [Backend Repo](https://github.com/bchin224/my_personal_kanban_api)
+- [Deployed Backend](https://mypersonalkanban22321.herokuapp.com/)
 
 ## Planning Process & Problem-Solving Strategy
 2/17
