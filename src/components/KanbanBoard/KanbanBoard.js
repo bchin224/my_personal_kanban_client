@@ -80,36 +80,6 @@ const KanbanCardIndex = data => {
     })
   }
 
-  // When create button is clicked, send data from modal to API
-  const handleCreate = () => {
-    event.preventDefault()
-    axios({
-      url: apiUrl + '/cards/',
-      method: 'POST',
-      headers: {
-        // we need the user so we have access to their token
-        'Authorization': `Token ${data.user.token}`
-      },
-      // send the notes and status as our data object
-      data: { card }
-    })
-      .then(() => setModalIsOpen(false))
-      .then(() => fetchCards())
-      .then(() => setCard({ notes: '', status: 'to-do' }))
-      .then(() => msgAlert({
-        heading: 'Kanban Card Created',
-        message: messages.createSuccess,
-        variant: 'success'
-      }))
-      .catch(error => {
-        msgAlert({
-          heading: 'Failed to Create New Card: ' + error.message,
-          message: messages.createFailure,
-          variant: 'danger'
-        })
-      })
-  }
-
   // When update button on modal is clicked, handle edits
   const handleUpdate = () => {
     event.preventDefault()
@@ -135,6 +105,36 @@ const KanbanCardIndex = data => {
         msgAlert({
           heading: 'Kanban Card Failed to Update: ' + error.message,
           message: messages.updateFailure,
+          variant: 'danger'
+        })
+      })
+  }
+
+  // When create button is clicked, send data from modal to API
+  const handleCreate = () => {
+    event.preventDefault()
+    axios({
+      url: apiUrl + '/cards/',
+      method: 'POST',
+      headers: {
+      // we need the user so we have access to their token
+        'Authorization': `Token ${data.user.token}`
+      },
+      // send the notes and status as our data object
+      data: { card }
+    })
+      .then(() => setModalIsOpen(false))
+      .then(() => fetchCards())
+      .then(() => setCard({ notes: '', status: 'to-do' }))
+      .then(() => msgAlert({
+        heading: 'Kanban Card Created',
+        message: messages.createSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Failed to Create New Card: ' + error.message,
+          message: messages.createFailure,
           variant: 'danger'
         })
       })
