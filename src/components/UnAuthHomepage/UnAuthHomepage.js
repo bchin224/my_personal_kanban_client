@@ -21,6 +21,7 @@ class UnAuthHomepage extends Component {
           <div className="row" id="kanban-board">
             <div className="col-11" id="unauth-home">
               Welcome! Sign up or sign in to start adding cards to your personal kanban board!
+              If you&apos;d like to test it out, please sign in with the email &quot;guest@guest.com&quot; and password &quot;guest&quot;.
             </div>
             <div className="col" id="unauth-home">
               <img src={modalBoard} alt="View your kanban board" width="300" id="screenshot"/>

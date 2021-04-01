@@ -45,6 +45,9 @@ My Personal Kanban is exactly that, your very own Kanban Board! You can add card
 - Added message alerts for CRUD actions
 - Finishing touches
 
+4/1
+- Added guest user
+
 ## Install Preparation
 1. Fork and clone this repository.
 2. Create and checkout to a new branch for your work.
